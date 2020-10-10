@@ -1,6 +1,7 @@
 #include "ObjLoader.h"
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -35,19 +36,12 @@ ObjLoader::ObjLoader(string filename) {
 			}
 		}
 
-		if (vline.size() != 4) {
-			cout << "Size is not corret" << endl;
-		}
-		else {
 			if (vline[0] == "v") {
-				vector<GLfloat> vertex;
 				for (int i = 1; i < vline.size(); ++i) {
-					vertex.push_back(atof(vline[i].c_str()));
+					vSets.push_back(atof(vline[i].c_str()));
 				}
-				vSets.push_back(vertex);
 			}
 			else if (vline[0] == "f") {
-				vector<GLint> face;
 				for (int i = 1; i < vline.size(); ++i) {
 					/*
 					* string vertex_index = "";
@@ -57,20 +51,26 @@ ObjLoader::ObjLoader(string filename) {
 					*		vertex_index += ch;
 					*	}
 					*	else {
-					*		face.push_back(atoi(vertex_index.c_str())-1);
+					*		fSets.push_back(atoi(vertex_index.c_str())-1);
 					*		break;
 					*	}
 					* }
 					*/
-					face.push_back(atoi(vline[i].c_str())-1);
+					fSets.push_back(atoi(vline[i].c_str())-1);
 				}
-				fSets.push_back(face);
 			}
-		}
+			else if (vline[0] == "#") {
+
+			}
+		
 	}
 	file.close();
 }
 
-void ObjLoader::Draw() {
+vector<float> ObjLoader::getVSets() {
+	return this->vSets;
+}
 
+vector<unsigned int> ObjLoader::getFSets() {
+	return this->fSets;
 }

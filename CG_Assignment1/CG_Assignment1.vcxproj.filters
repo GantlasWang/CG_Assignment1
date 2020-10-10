@@ -21,6 +21,9 @@
     <ClCompile Include="ObjLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\Gantlas\Desktop\OpenGL_Lib\glad\src\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ObjLoader.h">

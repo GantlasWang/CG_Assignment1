@@ -1,5 +1,5 @@
 #pragma once
-#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
@@ -9,8 +9,10 @@ using namespace std;
 class ObjLoader {
 public:
 	ObjLoader(string filename);
-	void Draw();
+	vector<float> getVSets();
+	vector<unsigned int> getFSets();
 private:
-	vector<vector<GLfloat>> vSets;
-	vector<vector<GLint>> fSets;
+	vector<float> vSets;
+	vector<unsigned int> fSets;
+	
 };

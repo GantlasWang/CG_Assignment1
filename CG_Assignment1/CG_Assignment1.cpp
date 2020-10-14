@@ -15,9 +15,9 @@ const int HEIGHT = 600;
 const int VERTICESNUM = 1009;
 const int FACESNUM = 2022;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.4f,0.3f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -0.2f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 0.1f, 0.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 1.0f,1.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, -1.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 float deltaTime = 0.0f;
 float lastTime = 0.0f;
@@ -154,6 +154,10 @@ int main()
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
 
+		int modelMatLocation = glGetUniformLocation(shaderProgram, "model");
+		int viewMatLocation = glGetUniformLocation(shaderProgram, "view");
+		int projectionMatLocation = glGetUniformLocation(shaderProgram, "projection");
+
 		processInput(window);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//更新深度测试
@@ -161,11 +165,17 @@ int main()
 		glUseProgram(shaderProgram);
 
 		glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-		//
 
 		glBindVertexArray(VAO);
 
-		//关于model矩阵的计算还有问题 （最后一个向量（旋转轴）的来历）
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		//glm::rotate(model, glm::radians(55.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projectionMatLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
 
 		glDrawElements(GL_TRIANGLES, 6066, GL_UNSIGNED_INT, 0);
 
@@ -201,9 +211,9 @@ void processInput(GLFWwindow* window)
 		cameraPos -= cameraSpeed * cameraFront;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp) * cameraSpeed);
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp) * cameraSpeed);
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 }

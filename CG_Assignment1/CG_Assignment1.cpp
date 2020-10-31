@@ -19,7 +19,7 @@ const glm::mat4 oldView = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0
 const glm::mat4 oldModel = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f,3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -3.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
@@ -189,7 +189,7 @@ int main()
 		glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projectionMatLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
-		glDrawElements(GL_TRIANGLES, 6066, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, FACESNUM * 3, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -217,16 +217,16 @@ void processInput(GLFWwindow* window)
 
 	float cameraSpeed = 2.0f * deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		cameraPos += cameraSpeed * cameraUp;
-	}
-	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		cameraPos -= cameraSpeed * cameraUp;
 	}
+	else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		cameraPos += cameraSpeed * cameraUp;
+	}
 	else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
 		model = glm::rotate(model, glm::radians(2.0f), glm::vec3(0.0f, 1.0f, 0.0f));
